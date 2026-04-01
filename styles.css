@@ -1105,6 +1105,17 @@ body.dark .nav__hamburger span {
   background: var(--clr-text);
 }
 
+/* Fix: .section--dark uses var(--clr-dark) for its background.
+   In dark mode --clr-dark is inverted to cream (#F7F3EE) which makes
+   the light-coloured text on that section invisible.
+   Override with a fixed dark colour that doesn't depend on the variable. */
+body.dark .section--dark {
+  background-color: #12100A;   /* deep near-black, darker than the page bg */
+  color: #EDE5D8;              /* keep text readable */
+}
+body.dark .brand-story__quote { color: var(--clr-gold); }
+body.dark .brand-story__body  { color: rgba(237, 229, 216, 0.75); }
+
 
 /* ----------------------------------------------------------------
    B. DARK MODE TOGGLE BUTTON

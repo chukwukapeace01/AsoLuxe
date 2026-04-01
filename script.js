@@ -249,21 +249,17 @@ const PRODUCTS = [
     name: 'Smokey Dress',
     category: 'dresses',
     categoryLabel: 'Dresses',
-    price: 'Rs 600',
+    price: 'Rs 950',
     badge: 'New',
-    image: 'images/dresses/orangepurple.jpeg',
-    description: 'A stunning Adire-inspired smokey print dress with a flowing silhouette. Perfect for evenings out, beach days or special occasions. Available in one size fits most.',
+    image: 'images/smokey-dress.jpeg',
+    description: 'A stunning Adire-inspired smokey print dress with a flowing silhouette. Perfect for evenings out or special occasions. Available in one size fits most.',
     sizes: [
       { value: 'S/M', available: true },
       { value: 'L/XL', available: true },
     ],
     prints: [
-      { name: 'OrangePurple', image: 'images/dresses/orangepurple.jpeg', available: true, maxQty: 1 },
-      { name: 'RedWhite', image: 'images/dresses/redwhite.jpeg', available: true, maxQty: 1 },
-      { name: 'GoldBrown', image: 'images/dresses/goldbrown.jpeg', available: true, maxQty: 1 },
-      { name: 'PurpleStripes', image: 'images/dresses/purplestripes.jpeg', available: true, maxQty: 1 },
-      { name: 'PurpleOrange', image: 'images/dresses/purpleorange.jpeg', available: true, maxQty: 1 },
-      { name: 'OrangeGold', image: 'images/dresses/orangegold.jpeg', available: true, maxQty: 1 },
+      { name: 'Smokey Blue', image: 'images/smokey-dress.jpeg', available: true, maxQty: 2 },
+      { name: 'Smokey Black', image: 'images/smokey-dress.jpeg', available: true, maxQty: 1 },
     ],
   },
   {
@@ -891,8 +887,13 @@ contactForm?.addEventListener('submit', (e) => {
     return;
   }
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    alert('Please enter a valid email address.');
+  /* Stricter email validation:
+     - must have @ with non-empty local part
+     - domain must have at least one dot
+     - TLD must be at least 2 characters (e.g. .com, .mu, .org)
+     - rejects things like "you.example.com" (no @) or "user@domain" (no TLD) */
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    alert('Please enter a valid email address (e.g. name@example.com).');
     return;
   }
 
@@ -1120,8 +1121,6 @@ function renderCartDrawer() {
   const total = cart.reduce((sum, item) => sum + parsePrice(item.price) * item.qty, 0);
   if (totalEl) totalEl.textContent = 'Rs ' + total.toLocaleString();
 
-  updateCartWhatsAppLink();
-
   listEl.querySelectorAll('.qty-btn').forEach((btn) => {
     btn.addEventListener('click', () => changeQty(btn.dataset.key, btn.dataset.action));
   });
@@ -1165,24 +1164,6 @@ document.getElementById('cart-clear-btn')?.addEventListener('click', () => {
   updateCartBadge();
   renderCartDrawer();
 });
-
-function updateCartWhatsAppLink() {
-  const btn = document.getElementById('cart-whatsapp-btn');
-  if (!btn || cart.length === 0) return;
-
-  const lines = cart.map((item) => {
-    return '- ' + item.name + ' (' + item.options + ') x' + item.qty + ' -- ' + item.price;
-  });
-
-  const total = cart.reduce((sum, i) => sum + parsePrice(i.price) * i.qty, 0);
-  const message =
-    "Hello, I'd like to order from Aso Luxe:\n\n" +
-    lines.join('\n') +
-    '\n\nTotal: Rs ' +
-    total.toLocaleString();
-
-  btn.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
-}
 
 function parsePrice(priceStr) {
   return parseInt(String(priceStr).replace(/[^0-9]/g, ''), 10) || 0;
@@ -1379,10 +1360,9 @@ document.getElementById('co-receipt-input')?.addEventListener('change', (e) => {
   if (confirmBtn)    confirmBtn.disabled    = false;
 });
 
-/* Make the upload label click trigger the hidden file input */
-document.querySelector('.co-upload-label')?.addEventListener('click', () => {
-  document.getElementById('co-receipt-input')?.click();
-});
+/* File input is triggered naturally by the <label for="co-receipt-input"> HTML attribute.
+   No manual click listener needed — adding one causes a double-open on desktop
+   and can block the native file picker on mobile browsers. */
 
 /* ── Confirm payment → WhatsApp ── */
 
@@ -1393,12 +1373,12 @@ document.getElementById('co-confirm-btn')?.addEventListener('click', () => {
   const total    = subtotal + coAreaPrice;
 
   const itemLines = cart.map(item =>
-    `• ${item.name} (${item.options}) x${item.qty} — ${item.price}`
+    `- ${item.name} (${item.options}) x${item.qty} -- ${item.price}`
   ).join('\n');
 
   const shippingLine = coMethod === 'pickup'
-    ? `Shipping: Pickup — African Leadership Campus, Kongo 105 (Free)`
-    : `Shipping: Delivery to ${coArea} — Rs ${coAreaPrice}`;
+    ? `Shipping: Pickup -- African Leadership Campus, Kongo 105 (Free)`
+    : `Shipping: Delivery to ${coArea} -- Rs ${coAreaPrice}`;
 
   const message =
     `Hello Aso Luxe! I have made payment for my order.\n\n` +
@@ -1413,4 +1393,12 @@ document.getElementById('co-confirm-btn')?.addEventListener('click', () => {
     'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message),
     '_blank'
   );
+
+  /* Clear the cart now that the order has been sent */
+  cart = [];
+  saveCart(cart);
+  updateCartBadge();
+
+  /* Send user back to home page after a short delay */
+  setTimeout(() => showPage('home'), 500);
 });
