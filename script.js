@@ -13,7 +13,7 @@ const PRODUCTS = [
     badge: 'New',
     image: 'images/men-tshirt.jpeg',
     description:
-      'A contemporary take on the classic Dashiki -- cut in breathable woven fabric with a modern relaxed fit. Rich Ankara-inspired block print in terracotta and indigo. Perfect for campus days or casual evenings out.',
+      'A contemporary take on the classic Dashiki, cut in breathable woven fabric with a modern relaxed fit. Rich African-inspired block print in terracotta and indigo. Perfect for campus days or casual evenings out.',
     sizes: [
       { value: 'XS', available: false },
       { value: 'S', available: false },
@@ -27,14 +27,14 @@ const PRODUCTS = [
   },
   {
     id: 2,
-    name: 'Ankara Palazzo / Wide-Leg Cargo Trousers',
+    name: 'Wide-Leg Cargo Trousers',
     category: 'bottoms',
     categoryLabel: 'Bottoms',
-    price: 'Rs 500',
+    price: 'Rs 600',
     badge: 'Bestseller',
     image: 'images/cowrie-palazzo.jpeg',
     description:
-      'Statement wide-leg trousers in bold print. High-waist silhouette with an elasticated back for all-day comfort. Pair with a plain tee for effortless contrast.',
+      'Unisex statement wide-leg trousers in bold print. High-waist silhouette with an elasticated back for all-day comfort. Pair with a plain tee for effortless contrast.',
     sizes: [{ value: 'L', available: true }],
     prints: [
       { name: 'Cowrie Print',     image: 'images/cowrie-palazzo.jpeg',                available: true, maxQty: 1 },
@@ -60,14 +60,14 @@ const PRODUCTS = [
   },
   {
     id: 3,
-    name: 'Ankara Palazzo / Wide-Leg Trousers',
+    name: 'Wide-Leg Trousers',
     category: 'bottoms',
     categoryLabel: 'Bottoms',
     price: 'Rs 500',
     badge: 'Bestseller',
     image: 'images/rainbow-weed-normal-trousers.jpeg',
     description:
-      'Statement wide-leg trousers in bold print. High-waist silhouette with an elasticated back for all-day comfort. Pair with a plain tee for effortless contrast.',
+      'Unisex statement wide-leg trousers in bold print. High-waist silhouette with an elasticated back for all-day comfort. Pair with a plain tee for effortless contrast.',
     sizes: [{ value: 'L', available: true }],
     prints: [
       { name: 'Safari Bloom',          image: 'images/rainbow-weed-normal-trousers.jpeg',    available: true, maxQty: 1 },
@@ -84,7 +84,7 @@ const PRODUCTS = [
     name: '2-piece Smokey Trousers Set',
     category: 'sets',
     categoryLabel: 'Sets',
-    price: 'Rs 800',
+    price: 'Rs 900',
     badge: 'Limited',
     image: 'images/2-piece-smokey trousers.jpeg',
     description:
@@ -109,7 +109,7 @@ const PRODUCTS = [
     name: 'Bohemian Earrings',
     category: 'accessories',
     categoryLabel: 'Accessories',
-    price: 'Rs 380',
+    price: 'Rs 350',
     badge: null,
     maxQty: 1,  /* accessories: max 1 per order */
     image: 'images/wooden-earrings.jpeg',
@@ -152,7 +152,7 @@ const PRODUCTS = [
     name: '2-piece Cargo Skirt Set',
     category: 'sets',
     categoryLabel: 'Sets',
-    price: 'Rs 650',
+    price: 'Rs 700',
     badge: 'Bestseller',
     maxQty: 1,
     image: 'images/2-piece-cargo-skirt.jpeg',
@@ -177,7 +177,7 @@ const PRODUCTS = [
     name: 'Tribal Beaded Earrings',
     category: 'accessories',
     categoryLabel: 'Accessories',
-    price: 'Rs 650',
+    price: 'Rs 380',
     badge: null,
     maxQty: 1,  /* accessories: max 1 per order */
     image: 'images/beaded-earrings.jpeg',
@@ -197,7 +197,7 @@ const PRODUCTS = [
     name: 'Adire Print Long Skirt',
     category: 'bottoms',
     categoryLabel: 'Bottoms',
-    price: 'Rs 500',
+    price: 'Rs 600',
     badge: null,
     image: 'images/longskirt/purple-adire.jpeg',
     description:
@@ -224,7 +224,7 @@ const PRODUCTS = [
     badge: null,
     image: 'images/Shorts.jpeg',
     description:
-      'Bold Kente-inspired print shorts with an elasticated waist and relaxed fit. Great for warm days on or off campus.',
+      'Unisex bold Kente-inspired print shorts with an elasticated waist and relaxed fit. Great for warm days on or off campus.',
     sizes: [
       { value: 'XS', available: false },
       { value: 'S', available: false },
@@ -243,23 +243,27 @@ const PRODUCTS = [
     ],
   },
 
-  /* ── DRESSES ── REPLACE image paths with your real photos ── */
   {
     id: 11,
     name: 'Smokey Dress',
     category: 'dresses',
     categoryLabel: 'Dresses',
-    price: 'Rs 950',
+    price: 'Rs 650',
     badge: 'New',
-    image: 'images/smokey-dress.jpeg',
+    image: 'images/dresses/orangepurple.jpeg',
     description: 'A stunning Adire-inspired smokey print dress with a flowing silhouette. Perfect for evenings out or special occasions. Available in one size fits most.',
     sizes: [
       { value: 'S/M', available: true },
       { value: 'L/XL', available: true },
     ],
     prints: [
-      { name: 'Smokey Blue', image: 'images/smokey-dress.jpeg', available: true, maxQty: 2 },
-      { name: 'Smokey Black', image: 'images/smokey-dress.jpeg', available: true, maxQty: 1 },
+      { name: 'OrangePurple', image: 'images/dresses/orangepurple.jpeg', available: true, maxQty: 1 },
+      { name: 'Purple Stripes', image: 'images/dresses/purplestripes.jpeg', available: true, maxQty: 1 },
+      { name: 'Gold Brown', image: 'images/dresses/goldbrown.jpeg', available: true, maxQty: 1 },
+      { name: 'RedWhite', image: 'images/dresses/redwhite.jpeg', available: true, maxQty: 1 },
+      { name: 'Purple Orange', image: 'images/dresses/purpleorange.jpeg', available: true, maxQty: 1 },
+      { name: 'Orange Gold', image: 'images/dresses/orangegold.jpeg', available: true, maxQty: 1 },
+
     ],
   },
   {
@@ -269,16 +273,15 @@ const PRODUCTS = [
     categoryLabel: 'Dresses',
     price: 'Rs 750',
     badge: null,
-    image: 'images/short-bubu.jpeg',
-    description: 'A chic short Bubu dress in vibrant Ankara print. Relaxed fit, easy to style. Great for campus days or casual outings.',
+    image: 'images/shortbubu/orangeblack.jpeg',
+    description: 'A chic short Bubu dress in vibrant African print. Relaxed fit, easy to style. Great for campus days or casual outings.',
     sizes: [
       { value: 'One Size', available: true },
     ],
     prints: [
-      { name: 'Cowrie Print',     image: 'images/prints/cowrie-print.jpeg',   available: true, maxQty: 2 },
-      { name: 'Blue Ankara',      image: 'images/prints/blue-ankara.jpeg',    available: true, maxQty: 2 },
-      { name: 'Terracotta Block', image: 'images/prints/terracotta.jpeg',     available: true, maxQty: 1 },
-      { name: 'Kente Gold',       image: 'images/prints/kente-gold.jpeg',     available: true, maxQty: 1 },
+      { name: 'Bold Print',     image: 'images/shortbubu/orangeblack.jpeg',   available: true, maxQty: 1 },
+      { name: 'Blue Ankara',      image: 'images/shortbubu/brownwhite.jpeg',    available: true, maxQty: 1 },
+      { name: 'Terracotta Block', image: 'images/shortbubu/yellowblack.jpeg',     available: true, maxQty: 1 },    
     ],
   },
   {
@@ -286,7 +289,7 @@ const PRODUCTS = [
     name: 'Long Bubu Dress',
     category: 'dresses',
     categoryLabel: 'Dresses',
-    price: 'Rs 900',
+    price: 'Rs 1200',
     badge: null,
     image: 'images/long-bubu.jpeg',
     description: 'A floor-length Bubu dress in bold African print. Elegant and comfortable — the perfect statement piece for any occasion.',
