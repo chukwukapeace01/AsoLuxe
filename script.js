@@ -201,7 +201,7 @@ const PRODUCTS = [
     badge: null,
     image: 'images/longskirt/purple-adire.jpeg',
     description:
-      'Flowy A-line midi skirt in East African Kanga print. Elastic waistband with a pull-on fit. The print features a traditional Swahili proverb border -- fashion that speaks.',
+      'Flowy A-line midi skirt in East African Kanga print. Elastic waistband with a pull-on fit. The print features a traditional Swahili proverb border; fashion that speaks.',
     sizes: [
       { value: '8', available: true },
       { value: '10', available: true },
@@ -968,8 +968,6 @@ darkToggleBtn?.addEventListener('click', () => {
   const saved = localStorage.getItem('asoluxe-dark');
   if (saved === '1') {
     setDarkMode(true);
-  } else if (saved === null) {
-    setDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
   }
 })();
 
