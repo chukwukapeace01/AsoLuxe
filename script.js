@@ -1218,6 +1218,18 @@ function openCheckout() {
   const methodError = document.getElementById('co-method-error');
   if (methodError) methodError.hidden = true;
 
+  /* Hide & reset customer details card */
+  const customerCard = document.getElementById('co-customer-card');
+  if (customerCard) customerCard.hidden = true;
+  const deliveryFields = document.getElementById('co-delivery-fields');
+  if (deliveryFields) deliveryFields.hidden = true;
+  const customerError = document.getElementById('co-customer-error');
+  if (customerError) customerError.hidden = true;
+  ['co-fullname','co-phone','co-delivery-address','co-delivery-note'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
   /* Reset receipt upload */
   const receiptInput = document.getElementById('co-receipt-input');
   if (receiptInput) receiptInput.value = '';
@@ -1282,8 +1294,12 @@ document.getElementById('co-pickup-radio')?.addEventListener('change', () => {
   const deliveryAreas = document.getElementById('co-delivery-areas');
   if (deliveryAreas) deliveryAreas.hidden = true;
 
-  /* Clear any area selection */
   document.querySelectorAll('input[name="co-area"]').forEach(r => r.checked = false);
+
+  const customerCard = document.getElementById('co-customer-card');
+  if (customerCard) customerCard.hidden = false;
+  const deliveryFields = document.getElementById('co-delivery-fields');
+  if (deliveryFields) deliveryFields.hidden = true;
 
   renderCheckoutSummary();
   hideMethodError();
@@ -1296,6 +1312,11 @@ document.getElementById('co-delivery-radio')?.addEventListener('change', () => {
 
   const deliveryAreas = document.getElementById('co-delivery-areas');
   if (deliveryAreas) deliveryAreas.hidden = false;
+
+  const customerCard = document.getElementById('co-customer-card');
+  if (customerCard) customerCard.hidden = false;
+  const deliveryFields = document.getElementById('co-delivery-fields');
+  if (deliveryFields) deliveryFields.hidden = false;
 
   renderCheckoutSummary();
   hideMethodError();
@@ -1319,9 +1340,8 @@ function hideMethodError() {
 /* ── Merchant Account button ── */
 
 document.getElementById('co-merchant-btn')?.addEventListener('click', () => {
-  /* Validate: must have chosen a method and (if delivery) an area */
-  const hasMethod   = coMethod !== null;
-  const hasArea     = coMethod === 'pickup' || (coMethod === 'delivery' && coArea !== null);
+  const hasMethod = coMethod !== null;
+  const hasArea   = coMethod === 'pickup' || (coMethod === 'delivery' && coArea !== null);
 
   if (!hasMethod || !hasArea) {
     const err = document.getElementById('co-method-error');
@@ -1334,11 +1354,26 @@ document.getElementById('co-merchant-btn')?.addEventListener('click', () => {
     return;
   }
 
-  /* All good — show bank details */
+  /* Validate customer details */
+  const fullName = document.getElementById('co-fullname')?.value.trim() || '';
+  const phone    = document.getElementById('co-phone')?.value.trim() || '';
+  const address  = document.getElementById('co-delivery-address')?.value.trim() || '';
+  const customerError = document.getElementById('co-customer-error');
+
+  if (!fullName || !phone || (coMethod === 'delivery' && !address)) {
+    if (customerError) {
+      customerError.textContent = coMethod === 'delivery' && !address
+        ? 'Please enter your full name, phone number, and delivery address.'
+        : 'Please enter your full name and phone number.';
+      customerError.hidden = false;
+    }
+    document.getElementById('co-customer-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  if (customerError) customerError.hidden = true;
+
   const bankDetails = document.getElementById('co-bank-details');
   if (bankDetails) bankDetails.hidden = false;
-
-  /* Scroll to bank details smoothly */
   bankDetails?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
@@ -1368,7 +1403,7 @@ document.getElementById('co-receipt-input')?.addEventListener('change', (e) => {
 /* ── Confirm payment → WhatsApp ── */
 
 document.getElementById('co-confirm-btn')?.addEventListener('click', () => {
-  if (!coReceiptFile) return;   /* safety check — button should be disabled */
+  if (!coReceiptFile) return;
 
   const subtotal = cart.reduce((sum, i) => sum + parsePrice(i.price) * i.qty, 0);
   const total    = subtotal + coAreaPrice;
@@ -1381,8 +1416,18 @@ document.getElementById('co-confirm-btn')?.addEventListener('click', () => {
     ? `Shipping: Pickup -- African Leadership Campus, Kongo 105 (Free)`
     : `Shipping: Delivery to ${coArea} -- Rs ${coAreaPrice}`;
 
+  const fullName = document.getElementById('co-fullname')?.value.trim() || '';
+  const phone    = document.getElementById('co-phone')?.value.trim() || '';
+  const address  = document.getElementById('co-delivery-address')?.value.trim() || '';
+  const note     = document.getElementById('co-delivery-note')?.value.trim() || '';
+
+  const customerLines = coMethod === 'delivery'
+    ? `Name: ${fullName}\nPhone: ${phone}\nDelivery Address: ${address}` + (note ? `\nDelivery Note: ${note}` : '')
+    : `Name: ${fullName}\nPhone: ${phone}`;
+
   const message =
     `Hello Aso Luxe! I have made payment for my order.\n\n` +
+    `CUSTOMER DETAILS:\n${customerLines}\n\n` +
     `ORDER DETAILS:\n${itemLines}\n\n` +
     `${shippingLine}\n` +
     `Subtotal: Rs ${subtotal.toLocaleString()}\n` +
@@ -1390,16 +1435,10 @@ document.getElementById('co-confirm-btn')?.addEventListener('click', () => {
     `Receipt uploaded: ${coReceiptFile.name}\n` +
     `Please confirm my order. Thank you!`;
 
-  window.open(
-    'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message),
-    '_blank'
-  );
+  window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message), '_blank');
 
-  /* Clear the cart now that the order has been sent */
   cart = [];
   saveCart(cart);
   updateCartBadge();
-
-  /* Send user back to home page after a short delay */
   setTimeout(() => showPage('home'), 500);
 });
