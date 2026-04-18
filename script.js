@@ -234,12 +234,12 @@ const PRODUCTS = [
     ],
     prints: [
       { name: 'Kente Print', image: 'images/shorts/kente.jpeg', available: true },
-      { name: 'Blue Symbols', image: 'images/shorts/short-blue-symbols.jpeg', available: true },
-      { name: 'Green Waves', image: 'images/shorts/short-green-waves.jpeg', available: true },
-      { name: 'PinkBlack Fusion', image: 'images/shorts/short-pinkblack.jpeg', available: true },
+      { name: 'Blue Symbols', image: 'images/shorts/bluesymbols.jpeg', available: true },
+      { name: 'Green Waves', image: 'images/shorts/greenwaves.jpeg', available: true },
+      { name: 'PinkBlack Fusion', image: 'images/shorts/pinkblack.jpeg', available: true },
       { name: 'BluePaint Splash', image: 'images/shorts/bluepatch.jpeg', available: true },
-      { name: 'WhiteBlack Tribal', image: 'images/shorts/short-whiteblack.jpeg', available: true },
-      { name: 'BluePatch Blocks', image: 'images/shorts/short-blue-symbols.jpeg', available: true },
+      { name: 'WhiteBlack Tribal', image: 'images/shorts/whiteblack.jpeg', available: true },
+      { name: 'BluePatch Blocks', image: 'images/shorts/paintsplash.jpeg', available: true },
     ],
   },
 
