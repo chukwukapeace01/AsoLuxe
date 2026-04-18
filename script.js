@@ -32,12 +32,12 @@ const PRODUCTS = [
     categoryLabel: 'Bottoms',
     price: 'Rs 600',
     badge: 'Bestseller',
-    image: 'images/cowrie-palazzo.jpeg',
+    image: 'images/cargo-greenblack-circles.jpeg',
     description:
       'Unisex statement wide-leg trousers in bold print. High-waist silhouette with an elasticated back for all-day comfort. Pair with a plain tee for effortless contrast.',
     sizes: [{ value: 'L', available: true }],
     prints: [
-      { name: 'Cowrie Print',     image: 'images/cowrie-palazzo.jpeg',                available: true, maxQty: 1 },
+      { name: 'GreenBlack Orbit',     image: 'images/cargo-greenblack-circles.jpeg',                available: true, maxQty: 1 },
       { name: 'Red TribalCode',   image: 'images/cargo-redwhite-tribal.jpeg',         available: true, maxQty: 1 },
       { name: 'Blue Swirl',       image: 'images/cargo-blue-swirl-motion.jpeg',       available: true, maxQty: 1 },
       { name: 'OrangePurple Adire', image: 'images/cargo-orangepurple-adire.jpeg',   available: true, maxQty: 1 },
@@ -53,7 +53,7 @@ const PRODUCTS = [
       { name: 'Fire Garden',      image: 'images/cargo-dark-yellow-redmix.jpeg',      available: true, maxQty: 2 }, /* 2 available */
       { name: 'Midnight Leaf',    image: 'images/cargo-leaves.jpeg',                  available: true, maxQty: 1 },
       { name: 'BluePink Blocks',  image: 'images/cargo-blue-pink-blocks.jpeg',        available: true, maxQty: 1 },
-      { name: 'GreenBlack Orbit', image: 'images/cargo-greenblack-circles.jpeg',      available: true, maxQty: 2 }, /* 2 available */
+      { name: 'Cowrie Print',     image: 'images/cowrie-palazzo.jpeg',                available: true, maxQty: 2 }, /* 2 available */
       { name: 'RedWhite Adire',   image: 'images/cargo-adire.jpeg',                   available: true, maxQty: 1 },
       { name: 'WhiteBlack Swirl', image: 'images/cargo-whiteblack-swirl.jpeg',        available: true, maxQty: 2 }, /* 2 available */
     ],
@@ -222,7 +222,7 @@ const PRODUCTS = [
     categoryLabel: 'Bottoms',
     price: 'Rs 500',
     badge: null,
-    image: 'images/Shorts.jpeg',
+    image: 'images/shorts/kente.jpeg',
     description:
       'Unisex bold Kente-inspired print shorts with an elasticated waist and relaxed fit. Great for warm days on or off campus.',
     sizes: [
@@ -233,13 +233,13 @@ const PRODUCTS = [
       { value: 'XL', available: false },
     ],
     prints: [
-      { name: 'Kente Print', image: 'images/Shorts.jpeg', available: true },
-      { name: 'Blue Symbols', image: 'images/short-blue-symbols.jpeg', available: true },
-      { name: 'Green Waves', image: 'images/short-green-waves.jpeg', available: true },
-      { name: 'PinkBlack Fusion', image: 'images/short-pinkblack.jpeg', available: true },
-      { name: 'BluePaint Splash', image: 'images/short-paint-splash.jpeg', available: true },
-      { name: 'WhiteBlack Tribal', image: 'images/short-whiteblack.jpeg', available: true },
-      { name: 'BluePatch Blocks', image: 'images/short-bluepatch.jpeg', available: true },
+      { name: 'Kente Print', image: 'images/shorts/kente.jpeg', available: true },
+      { name: 'Blue Symbols', image: 'images/shorts/short-blue-symbols.jpeg', available: true },
+      { name: 'Green Waves', image: 'images/shorts/short-green-waves.jpeg', available: true },
+      { name: 'PinkBlack Fusion', image: 'images/shorts/short-pinkblack.jpeg', available: true },
+      { name: 'BluePaint Splash', image: 'images/shorts/bluepatch.jpeg', available: true },
+      { name: 'WhiteBlack Tribal', image: 'images/shorts/short-whiteblack.jpeg', available: true },
+      { name: 'BluePatch Blocks', image: 'images/shorts/short-blue-symbols.jpeg', available: true },
     ],
   },
 
