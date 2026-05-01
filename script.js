@@ -1400,45 +1400,130 @@ document.getElementById('co-receipt-input')?.addEventListener('change', (e) => {
    No manual click listener needed — adding one causes a double-open on desktop
    and can block the native file picker on mobile browsers. */
 
-/* ── Confirm payment → WhatsApp ── */
+/* ================================================================
+   BACKEND API URL
+   REPLACE this with your real Google Cloud Run URL after deployment.
+   Example: 'https://asoluxe-backend-abc123-ew.a.run.app'
+   During local testing use: 'http://localhost:8080'
+   ================================================================ */
+const API_BASE = 'http://127.0.0.1:8080';
 
-document.getElementById('co-confirm-btn')?.addEventListener('click', () => {
+document.getElementById('co-confirm-btn')?.addEventListener('click', async () => {
   if (!coReceiptFile) return;
+
+  const confirmBtn = document.getElementById('co-confirm-btn');
+  const fullName   = document.getElementById('co-fullname')?.value.trim()           || '';
+  const phone      = document.getElementById('co-phone')?.value.trim()              || '';
+  const address    = document.getElementById('co-delivery-address')?.value.trim()   || '';
+  const note       = document.getElementById('co-delivery-note')?.value.trim()      || '';
 
   const subtotal = cart.reduce((sum, i) => sum + parsePrice(i.price) * i.qty, 0);
   const total    = subtotal + coAreaPrice;
 
-  const itemLines = cart.map(item =>
-    `- ${item.name} (${item.options}) x${item.qty} -- ${item.price}`
-  ).join('\n');
+  /* Build the order payload */
+  const orderData = {
+    customer_name:   fullName,
+    phone:           phone,
+    delivery_method: coMethod,
+    address:         coMethod === 'delivery' ? address : 'African Leadership Campus, Kongo 105',
+    delivery_note:   note || null,
+    total_amount:    total,
+    items: cart.map(item => ({
+      name:      item.name,
+      options:   item.options,
+      qty:       item.qty,
+      price_int: parsePrice(item.price),
+    })),
+  };
 
-  const shippingLine = coMethod === 'pickup'
-    ? `Shipping: Pickup -- African Leadership Campus, Kongo 105 (Free)`
-    : `Shipping: Delivery to ${coArea} -- Rs ${coAreaPrice}`;
+  /* Build multipart form — order data as JSON + receipt file */
+  const formData = new FormData();
+  formData.append('order_data', JSON.stringify(orderData));
+  formData.append('receipt', coReceiptFile, coReceiptFile.name);
 
-  const fullName = document.getElementById('co-fullname')?.value.trim() || '';
-  const phone    = document.getElementById('co-phone')?.value.trim() || '';
-  const address  = document.getElementById('co-delivery-address')?.value.trim() || '';
-  const note     = document.getElementById('co-delivery-note')?.value.trim() || '';
+  /* Disable button and show loading state */
+  confirmBtn.disabled     = true;
+  confirmBtn.textContent  = 'Saving order...';
 
-  const customerLines = coMethod === 'delivery'
-    ? `Name: ${fullName}\nPhone: ${phone}\nDelivery Address: ${address}` + (note ? `\nDelivery Note: ${note}` : '')
-    : `Name: ${fullName}\nPhone: ${phone}`;
+  try {
+    const res  = await fetch(`${API_BASE}/api/orders`, {
+      method: 'POST',
+      body:   formData,
+    });
+    const data = await res.json();
 
-  const message =
-    `Hello Aso Luxe! I have made payment for my order.\n\n` +
-    `CUSTOMER DETAILS:\n${customerLines}\n\n` +
-    `ORDER DETAILS:\n${itemLines}\n\n` +
-    `${shippingLine}\n` +
-    `Subtotal: Rs ${subtotal.toLocaleString()}\n` +
-    `Total Paid: Rs ${total.toLocaleString()}\n\n` +
-    `Receipt uploaded: ${coReceiptFile.name}\n` +
-    `Please confirm my order. Thank you!`;
+    if (!res.ok) {
+      throw new Error(data.error || 'Server error');
+    }
 
-  window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message), '_blank');
+    /* Order saved — now build and send the WhatsApp message */
+    const itemLines = cart.map(item =>
+      `- ${item.name} (${item.options}) x${item.qty} -- ${item.price}`
+    ).join('\n');
 
-  cart = [];
-  saveCart(cart);
-  updateCartBadge();
-  setTimeout(() => showPage('home'), 500);
+    const shippingLine = coMethod === 'pickup'
+      ? `Shipping: Pickup -- African Leadership Campus, Kongo 105 (Free)`
+      : `Shipping: Delivery to ${coArea} -- Rs ${coAreaPrice}`;
+
+    const customerLines = coMethod === 'delivery'
+      ? `Name: ${fullName}\nPhone: ${phone}\nDelivery Address: ${address}` +
+        (note ? `\nDelivery Note: ${note}` : '')
+      : `Name: ${fullName}\nPhone: ${phone}`;
+
+    const message =
+      `Hello Aso Luxe! I have made payment for my order.\n\n` +
+      `ORDER #${data.order_id}\n\n` +
+      `CUSTOMER DETAILS:\n${customerLines}\n\n` +
+      `ORDER DETAILS:\n${itemLines}\n\n` +
+      `${shippingLine}\n` +
+      `Subtotal: Rs ${subtotal.toLocaleString()}\n` +
+      `Total Paid: Rs ${total.toLocaleString()}\n\n` +
+      `Receipt uploaded and saved. Please confirm my order. Thank you!`;
+
+    window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message), '_blank');
+
+    /* Clear cart and go home */
+    cart = [];
+    saveCart(cart);
+    updateCartBadge();
+    setTimeout(() => showPage('home'), 500);
+
+  } catch (err) {
+    /* If API fails, still let the customer send via WhatsApp so they're not stuck */
+    console.error('Order save failed:', err);
+
+    const itemLines = cart.map(item =>
+      `- ${item.name} (${item.options}) x${item.qty} -- ${item.price}`
+    ).join('\n');
+
+    const shippingLine = coMethod === 'pickup'
+      ? `Shipping: Pickup -- African Leadership Campus, Kongo 105 (Free)`
+      : `Shipping: Delivery to ${coArea} -- Rs ${coAreaPrice}`;
+
+    const customerLines = coMethod === 'delivery'
+      ? `Name: ${fullName}\nPhone: ${phone}\nDelivery Address: ${address}` +
+        (note ? `\nDelivery Note: ${note}` : '')
+      : `Name: ${fullName}\nPhone: ${phone}`;
+
+    const message =
+      `Hello Aso Luxe! I have made payment for my order.\n\n` +
+      `CUSTOMER DETAILS:\n${customerLines}\n\n` +
+      `ORDER DETAILS:\n${itemLines}\n\n` +
+      `${shippingLine}\n` +
+      `Subtotal: Rs ${subtotal.toLocaleString()}\n` +
+      `Total Paid: Rs ${total.toLocaleString()}\n\n` +
+      `Receipt uploaded: ${coReceiptFile.name}\n` +
+      `Please confirm my order. Thank you!`;
+
+    window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message), '_blank');
+
+    cart = [];
+    saveCart(cart);
+    updateCartBadge();
+    setTimeout(() => showPage('home'), 500);
+
+  } finally {
+    confirmBtn.disabled    = false;
+    confirmBtn.textContent = "I've Made Payment -- Send Order via WhatsApp";
+  }
 });
