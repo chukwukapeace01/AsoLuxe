@@ -18,8 +18,8 @@ from flask import Flask, request, jsonify, render_template_string, abort
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-from backend.db      import get_connection, init_db
-from backend.storage import upload_receipt
+from db import get_connection, init_db
+from storage import upload_receipt
 
 # ── Setup ──────────────────────────────────────────────────────
 load_dotenv()
@@ -28,7 +28,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-change-in-production')
 
 # Allow requests from any origin (your frontend HTML file / hosted domain)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, origins="*", supports_credentials=True)
 
 
 # ── Admin auth decorator ───────────────────────────────────────
@@ -97,16 +97,34 @@ def create_order():
     if not isinstance(items, list) or len(items) == 0:
         return jsonify({'error': 'items must be a non-empty list'}), 400
 
-    # ── 3. Upload receipt to Firebase Storage ──
+    # ── 3. Save receipt locally (Firebase not set up yet) ──
+    # When you get Firebase credentials, replace this block with:
+    # receipt_url = upload_receipt(receipt_file.stream, receipt_file.filename)
     receipt_url = None
     receipt_file = request.files.get('receipt')
 
     if receipt_file and receipt_file.filename:
         try:
-            receipt_url = upload_receipt(receipt_file.stream, receipt_file.filename)
+            import uuid
+            from werkzeug.utils import secure_filename
+
+            # Create receipts folder if it doesn't exist
+            receipts_dir = os.path.join(os.path.dirname(__file__), 'receipts')
+            os.makedirs(receipts_dir, exist_ok=True)
+
+            # Save with a unique filename
+            ext           = receipt_file.filename.rsplit('.', 1)[-1].lower() if '.' in receipt_file.filename else 'jpg'
+            unique_name   = f"{uuid.uuid4().hex}.{ext}"
+            save_path     = os.path.join(receipts_dir, unique_name)
+            receipt_file.save(save_path)
+
+            # Store as a local URL path so admin can view it
+            receipt_url = f"/receipts/{unique_name}"
+            app.logger.info(f"Receipt saved locally: {save_path}")
+
         except Exception as e:
-            app.logger.error(f"Receipt upload failed: {e}")
-            return jsonify({'error': 'Receipt upload failed. Please try again.'}), 500
+            app.logger.error(f"Receipt save failed: {e}")
+            # Don't block the order if receipt save fails — just log it
 
     # ── 4. Save to PostgreSQL ──
     conn = get_connection()
@@ -121,11 +139,11 @@ def create_order():
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """, (
-            data['customer_name'].strip(),
-            data['phone'].strip(),
+            str(data.get('customer_name') or '').strip() or 'Unknown',
+            str(data.get('phone') or '').strip() or 'Unknown',
             data['delivery_method'],
-            data.get('address', '').strip() or None,
-            data.get('delivery_note', '').strip() or None,
+            str(data.get('address') or '').strip() or None,
+            str(data.get('delivery_note') or '').strip() or None,
             int(data['total_amount']),
             receipt_url,
         ))
@@ -305,6 +323,38 @@ def update_order(order_id):
         return jsonify({'error': 'Order not found'}), 404
 
     return jsonify({'success': True, 'order_id': order_id}), 200
+
+
+@app.route('/receipts/<filename>')
+def serve_receipt(filename):
+    """Serve locally saved receipt files for the admin dashboard."""
+    from flask import send_from_directory
+    receipts_dir = os.path.join(os.path.dirname(__file__), 'receipts')
+    return send_from_directory(receipts_dir, filename)
+
+
+# ── Serve frontend files ──────────────────────────────────────
+# This serves index.html, script.js, styles.css and the images folder
+# directly from Flask so the website runs on http://127.0.0.1:8080
+# instead of file:/// — this fixes all CORS/fetch issues locally.
+
+@app.route('/')
+def serve_index():
+    """Serve the main website."""
+    from flask import send_from_directory
+    frontend_dir = os.path.join(os.path.dirname(__file__), '..')
+    return send_from_directory(frontend_dir, 'index.html')
+
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    """Serve CSS, JS, images and other static files."""
+    from flask import send_from_directory
+    # Don't intercept API or admin routes
+    if filename.startswith('api/') or filename.startswith('admin') or filename.startswith('health') or filename.startswith('receipts/'):
+        abort(404)
+    frontend_dir = os.path.join(os.path.dirname(__file__), '..')
+    return send_from_directory(frontend_dir, filename)
 
 
 # ── GET /admin ───────────────────────────────────────────────
@@ -539,7 +589,7 @@ ADMIN_HTML = """
   // Get password from URL: /admin?password=YOUR_PASSWORD
   const params   = new URLSearchParams(window.location.search);
   const PASSWORD = params.get('password') || '';
-  const API_BASE = window.location.origin;
+  const API_BASE = 'http://127.0.0.1:8080';
 
   let allOrders = [];
 

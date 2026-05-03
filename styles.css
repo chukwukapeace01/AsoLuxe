@@ -2288,3 +2288,114 @@ body.dark .form-group textarea {
 }
 body.dark .form-group input:focus,
 body.dark .form-group textarea:focus { border-color: var(--clr-accent); }
+
+/* ================================================================
+   ADMIN NAV BUTTON + LOGIN MODAL
+   ================================================================ */
+
+/* Eye icon button in navbar — same style as dark toggle and cart */
+.nav__admin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--clr-text);
+  cursor: pointer;
+  transition: background var(--trans-fast), color var(--trans-fast);
+  flex-shrink: 0;
+}
+.nav__admin-btn svg { width: 20px; height: 20px; }
+.nav__admin-btn:hover { background: var(--clr-bg-alt); color: var(--clr-accent); }
+
+/* Modal overlay */
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.admin-modal-overlay[hidden] { display: none !important; }
+
+/* Modal box */
+.admin-modal {
+  background: var(--clr-white);
+  border-radius: var(--radius-md);
+  padding: 2rem 1.75rem;
+  width: 100%;
+  max-width: 380px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+.admin-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--clr-text-muted);
+  cursor: pointer;
+}
+.admin-modal__close:hover { color: var(--clr-text); }
+
+.admin-modal__icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+.admin-modal__title {
+  font-family: var(--ff-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 0.4rem;
+}
+
+.admin-modal__subtitle {
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.admin-modal__field input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #D5C8B5;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--clr-text);
+  background: var(--clr-white);
+  margin-bottom: 0.75rem;
+  transition: border-color var(--trans-fast);
+}
+.admin-modal__field input:focus {
+  outline: none;
+  border-color: var(--clr-accent);
+}
+
+.admin-modal__error {
+  font-size: 0.82rem;
+  color: #c0392b;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.admin-modal__error[hidden] { display: none; }
+
+/* Dark mode */
+body.dark .admin-modal {
+  background: var(--clr-bg-alt);
+}
+body.dark .admin-modal__field input {
+  background: var(--clr-bg);
+  border-color: rgba(237,229,216,0.2);
+  color: var(--clr-text);
+}

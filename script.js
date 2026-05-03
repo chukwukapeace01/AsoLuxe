@@ -1527,3 +1527,76 @@ document.getElementById('co-confirm-btn')?.addEventListener('click', async () =>
     confirmBtn.textContent = "I've Made Payment -- Send Order via WhatsApp";
   }
 });
+
+/* ================================================================
+   ADMIN LOGIN
+   Eye icon in navbar opens a password modal.
+   Password is verified against the Flask backend.
+   If correct, opens the admin dashboard in a new tab.
+   ================================================================ */
+
+const adminBtn          = document.getElementById('admin-btn');
+const adminModalOverlay = document.getElementById('admin-modal-overlay');
+const adminModalClose   = document.getElementById('admin-modal-close');
+const adminLoginBtn     = document.getElementById('admin-login-btn');
+const adminPasswordInput = document.getElementById('admin-password-input');
+const adminModalError   = document.getElementById('admin-modal-error');
+
+/* Open modal when eye icon is clicked */
+adminBtn?.addEventListener('click', () => {
+  adminModalOverlay.hidden = false;
+  adminModalError.hidden   = true;
+  adminPasswordInput.value = '';
+  setTimeout(() => adminPasswordInput.focus(), 100);
+});
+
+/* Close modal */
+function closeAdminModal() {
+  adminModalOverlay.hidden = true;
+  adminPasswordInput.value = '';
+  adminModalError.hidden   = true;
+}
+
+adminModalClose?.addEventListener('click', closeAdminModal);
+adminModalOverlay?.addEventListener('click', (e) => {
+  if (e.target === adminModalOverlay) closeAdminModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeAdminModal();
+});
+
+/* Allow pressing Enter in the password field */
+adminPasswordInput?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') adminLoginBtn.click();
+});
+
+/* Verify password and open dashboard */
+adminLoginBtn?.addEventListener('click', async () => {
+  const password = adminPasswordInput.value.trim();
+  if (!password) return;
+
+  adminLoginBtn.textContent = 'Checking...';
+  adminLoginBtn.disabled    = true;
+  adminModalError.hidden    = true;
+
+  try {
+    /* Test the password by calling the API — if it returns 401 the password is wrong */
+    const res = await fetch(`${API_BASE}/api/orders?password=${encodeURIComponent(password)}`);
+
+    if (res.ok) {
+      /* Password correct — open dashboard in new tab */
+      window.open(`${API_BASE}/admin?password=${encodeURIComponent(password)}`, '_blank');
+      closeAdminModal();
+    } else {
+      /* Wrong password */
+      adminModalError.hidden = false;
+      adminPasswordInput.select();
+    }
+  } catch (err) {
+    adminModalError.textContent = 'Could not connect to server. Make sure the backend is running.';
+    adminModalError.hidden = false;
+  } finally {
+    adminLoginBtn.textContent = 'Open Dashboard';
+    adminLoginBtn.disabled    = false;
+  }
+});
