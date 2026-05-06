@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aso Luxe — African Style for Everyday Wear</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header" id="site-header">
+      <nav class="nav container">
+        <a
+          href="javascript:void(0)"
+          class="nav__logo"
+          onclick="showPage('home')"
+        >
+          <span class="logo-text"
+            >Aso<span class="logo-accent">Luxe</span></span
+          >
+        </a>
+
+        <ul class="nav__links" id="nav-links">
+          <li>
+            <a
+              href="javascript:void(0)"
+              class="nav__link active"
+              data-page="home"
+              onclick="showPage('home')"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="javascript:void(0)"
+              class="nav__link"
+              data-page="shop"
+              onclick="showPage('shop')"
+              >Shop</a
+            >
+          </li>
+          <li>
+            <a
+              href="javascript:void(0)"
+              class="nav__link"
+              data-page="about"
+              onclick="showPage('about')"
+              >About</a
+            >
+          </li>
+          <li>
+            <a
+              href="javascript:void(0)"
+              class="nav__link"
+              data-page="contact"
+              onclick="showPage('contact')"
+              >Contact</a
+            >
+          </li>
+        </ul>
+
+        <div class="nav__actions">
+          <!-- Admin eye icon — opens password prompt -->
+          <button
+            class="nav__admin-btn"
+            id="admin-btn"
+            aria-label="Admin login"
+            type="button"
+            title="Admin"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+
+          <button
+            class="nav__dark-toggle"
+            id="dark-toggle"
+            aria-label="Toggle dark mode"
+            type="button"
+          >
+            <svg
+              class="icon-moon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+
+            <svg
+              class="icon-sun"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          </button>
+
+          <button
+            class="nav__cart-btn"
+            id="cart-btn"
+            aria-label="Open cart"
+            type="button"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+            <span class="cart-badge" id="cart-badge" hidden>0</span>
+          </button>
+
+          <button
+            class="nav__hamburger"
+            id="hamburger"
+            aria-label="Toggle menu"
+            type="button"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+
+    <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping cart">
+      <div class="cart-drawer__header">
+        <h2 class="cart-drawer__title">Your Cart</h2>
+        <button
+          class="cart-drawer__close"
+          id="cart-close"
+          aria-label="Close cart"
+          type="button"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="cart-drawer__body">
+        <!-- Empty state: outside cart-items-list so innerHTML='' never destroys it -->
+        <div class="cart-empty" id="cart-empty" hidden>
+          <span class="cart-empty__icon">🛍️</span>
+          <p>Your cart is empty.</p>
+          <!-- Clicking this sends user to the Shop page -->
+          <button
+            type="button"
+            class="cart-empty__shop-link"
+            onclick="
+              closeCart();
+              showPage('shop');
+            "
+          >
+            Add something beautiful →
+          </button>
+        </div>
+        <div id="cart-items-list"></div>
+      </div>
+
+      <div class="cart-drawer__footer" id="cart-footer" hidden>
+        <div class="cart-total">
+          <span>Total</span>
+          <strong id="cart-total-price">Rs 0</strong>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn--whatsapp btn--full"
+          id="cart-checkout-btn"
+          onclick="
+            closeCart();
+            openCheckout();
+          "
+        >
+          Checkout
+        </button>
+
+        <!-- Continue Shopping: closes cart and returns to shop -->
+        <button
+          type="button"
+          class="btn btn--outline-muted btn--full mt-sm"
+          onclick="
+            closeCart();
+            showPage('shop');
+          "
+        >
+          Continue Shopping
+        </button>
+
+        <button
+          class="btn btn--text btn--full mt-sm"
+          id="cart-clear-btn"
+          type="button"
+          style="color: var(--clr-text-muted); font-size: 0.8rem"
+        >
+          Clear Cart
+        </button>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+       ADMIN LOGIN MODAL
+    ============================================================ -->
+    <div class="admin-modal-overlay" id="admin-modal-overlay" hidden>
+      <div class="admin-modal">
+        <button class="admin-modal__close" id="admin-modal-close" type="button">
+          ✕
+        </button>
+        <div class="admin-modal__icon">👁️</div>
+        <h2 class="admin-modal__title">Admin Access</h2>
+        <p class="admin-modal__subtitle">Enter password</p>
+        <div class="admin-modal__field">
+          <input
+            type="password"
+            id="admin-password-input"
+            placeholder="Enter admin password"
+            autocomplete="current-password"
+          />
+        </div>
+        <p class="admin-modal__error" id="admin-modal-error" hidden>
+          Incorrect password. Please try again.
+        </p>
+        <button
+          class="btn btn--primary btn--full"
+          id="admin-login-btn"
+          type="button"
+        >
+          Open Dashboard
+        </button>
+      </div>
+    </div>
+
+    <main id="page-home" class="page active">
+      <section class="hero">
+        <div
+          class="hero__bg"
+          style="
+            background-image: url(&quot;images/palazzo-trousers.jpeg&quot;);
+          "
+        ></div>
+        <div class="hero__overlay"></div>
+        <div class="hero__content container">
+          <p class="hero__eyebrow">New Collection · 2025</p>
+          <h1 class="hero__headline">
+            African style made<br /><em>for everyday wear.</em>
+          </h1>
+          <p class="hero__sub">
+            Handcrafted prints. Modern cuts. Worn on campus and beyond.
+          </p>
+          <div class="hero__actions">
+            <button
+              class="btn btn--primary"
+              onclick="showPage('shop')"
+              type="button"
+            >
+              Shop Now
+            </button>
+            <a
+              href="https://wa.me/23055198497?text=Hello%20Aso%20Luxe"
+              class="btn btn--ghost"
+              target="_blank"
+              rel="noopener"
+              >Order on WhatsApp</a
+            >
+          </div>
+        </div>
+        <div class="hero__scroll-hint">Scroll ↓</div>
+      </section>
+
+      <section class="categories section">
+        <div class="container">
+          <h2 class="section-title">Shop by Category</h2>
+          <div class="categories__grid">
+            <article class="category-card" onclick="showPage('shop')">
+              <div
+                class="category-card__img"
+                style="
+                  background-image: url(&quot;https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=80&quot;);
+                "
+              ></div>
+              <div class="category-card__body">
+                <h3>Shirts & Tops</h3>
+                <span class="category-card__cta">Explore →</span>
+              </div>
+            </article>
+
+            <article class="category-card" onclick="showPage('shop')">
+              <div
+                class="category-card__img"
+                style="
+                  background-image: url(&quot;images/dresses/purpleorange.jpeg&quot;);
+                "
+              ></div>
+              <div class="category-card__body">
+                <h3>Dresses</h3>
+                <span class="category-card__cta">Explore →</span>
+              </div>
+            </article>
+
+            <article class="category-card" onclick="showPage('shop')">
+              <div
+                class="category-card__img"
+                style="
+                  background-image: url(&quot;images/standing-palazzo.jpeg&quot;);
+                "
+              ></div>
+              <div class="category-card__body">
+                <h3>Trousers & Sets</h3>
+                <span class="category-card__cta">Explore →</span>
+              </div>
+            </article>
+
+            <article class="category-card" onclick="showPage('shop')">
+              <div
+                class="category-card__img"
+                style="background-image: url(&quot;images/earrings.jpeg&quot;)"
+              ></div>
+              <div class="category-card__body">
+                <h3>Accessories</h3>
+                <span class="category-card__cta">Explore →</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="featured section section--cream">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Featured Pieces</h2>
+            <button
+              class="btn btn--text"
+              onclick="showPage('shop')"
+              type="button"
+            >
+              View all →
+            </button>
+          </div>
+          <div class="products-grid" id="featured-products"></div>
+        </div>
+      </section>
+
+      <section class="campus section">
+        <div class="container campus__inner">
+          <div class="campus__text">
+            <p class="campus__eyebrow">Campus Style</p>
+            <h2 class="campus__title">
+              From lecture halls<br />to Lagos nights.
+            </h2>
+            <p class="campus__body">
+              Aso Luxe was built for students and young professionals who refuse
+              to choose between culture and comfort. Our pieces move with you,
+              bold enough for the weekend, clean enough for a Monday
+              presentation.
+            </p>
+            <button
+              class="btn btn--primary"
+              onclick="showPage('shop')"
+              type="button"
+            >
+              Shop the Look
+            </button>
+          </div>
+
+          <div
+            class="campus__image"
+            style="background-image: url(&quot;images/campusphoto2.jpeg&quot;)"
+          ></div>
+        </div>
+      </section>
+
+      <section class="brand-story section section--dark">
+        <div class="container brand-story__inner">
+          <p class="brand-story__quote">"Wear your roots with pride."</p>
+          <p class="brand-story__body">
+            Born in Mauritius, inspired by the continent. Aso Luxe blends West
+            African textile traditions with contemporary streetwear silhouettes.
+            Every stitch tells a story of heritage, crafted for the next
+            generation.
+          </p>
+          <button
+            class="btn btn--outline"
+            onclick="showPage('about')"
+            type="button"
+          >
+            Our Story
+          </button>
+        </div>
+      </section>
+
+      <a
+        class="whatsapp-fab"
+        href="https://wa.me/23055198497?text=Hello%2C%20I%27d%20like%20to%20order%20from%20Aso%20Luxe!"
+        target="_blank"
+        rel="noopener"
+        aria-label="Chat on WhatsApp"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+          />
+        </svg>
+      </a>
+    </main>
+
+    <main id="page-shop" class="page">
+      <section class="page-hero section--sm">
+        <div class="container">
+          <h1 class="page-hero__title">The Collection</h1>
+          <p class="page-hero__sub">
+            Handpicked pieces for the culture-forward generation.
+          </p>
+        </div>
+      </section>
+
+      <section class="shop-grid section">
+        <div class="container">
+          <div class="shop-filters">
+            <button class="filter-btn active" data-filter="all" type="button">
+              All
+            </button>
+            <button class="filter-btn" data-filter="tops" type="button">
+              Tops
+            </button>
+            <button class="filter-btn" data-filter="bottoms" type="button">
+              Bottoms
+            </button>
+            <button class="filter-btn" data-filter="dresses" type="button">
+              Dresses
+            </button>
+            <button class="filter-btn" data-filter="sets" type="button">
+              Sets
+            </button>
+            <button class="filter-btn" data-filter="accessories" type="button">
+              Accessories
+            </button>
+          </div>
+
+          <div class="products-grid" id="shop-products"></div>
+        </div>
+      </section>
+    </main>
+
+    <main id="page-product" class="page">
+      <section class="product-detail section">
+        <div class="container product-detail__inner">
+          <div class="product-detail__thumbs" id="product-thumbs"></div>
+
+          <div class="product-detail__gallery">
+            <img
+              id="product-main-img"
+              src=""
+              alt="Product image"
+              class="product-detail__main-img"
+            />
+          </div>
+
+          <div class="product-detail__info">
+            <p class="product-detail__category" id="product-category"></p>
+            <h1 class="product-detail__name" id="product-name"></h1>
+            <p class="product-detail__price" id="product-price"></p>
+
+            <div class="product-detail__availability" id="product-availability">
+              <span class="avail-dot"></span>
+              <span id="avail-text">Available</span>
+            </div>
+
+            <p class="product-detail__desc" id="product-desc"></p>
+
+            <div
+              class="product-detail__option-group"
+              id="print-selector-group"
+              hidden
+            >
+              <p class="option-label">
+                Select Print
+                <span
+                  class="option-selected-label"
+                  id="selected-print-label"
+                ></span>
+              </p>
+              <div class="print-options" id="print-options"></div>
+              <p class="out-of-stock-msg" id="print-oos-msg" hidden>
+                This print is out of stock.
+              </p>
+            </div>
+
+            <div
+              class="product-detail__option-group"
+              id="colour-selector-group"
+              hidden
+            >
+              <p class="option-label">
+                Select Colour
+                <span
+                  class="option-selected-label"
+                  id="selected-colour-label"
+                ></span>
+              </p>
+              <div class="colour-options" id="colour-options"></div>
+              <p class="out-of-stock-msg" id="colour-oos-msg" hidden>
+                This colour is out of stock.
+              </p>
+            </div>
+
+            <div
+              class="product-detail__option-group"
+              id="size-selector-group"
+              hidden
+            >
+              <p class="option-label">
+                Select Size
+                <span
+                  class="option-selected-label"
+                  id="selected-size-label"
+                ></span>
+              </p>
+              <div class="size-options" id="size-options"></div>
+              <p class="out-of-stock-msg" id="size-oos-msg" hidden>
+                This size is out of stock.
+              </p>
+            </div>
+
+            <div class="product-detail__option-group">
+              <p class="option-label">Quantity</p>
+              <div class="quantity-control">
+                <button type="button" class="qty-ctrl-btn" id="qty-decrease">
+                  −
+                </button>
+                <span class="qty-ctrl-value" id="qty-display">1</span>
+                <button type="button" class="qty-ctrl-btn" id="qty-increase">
+                  +
+                </button>
+              </div>
+              <p class="qty-max-note">Maximum 2 per item</p>
+            </div>
+
+            <button
+              id="add-to-cart-btn"
+              class="btn btn--primary btn--full"
+              type="button"
+            >
+              Add to Cart
+            </button>
+
+            <a
+              id="whatsapp-order-btn"
+              href="#"
+              class="btn btn--ghost btn--full mt-sm"
+              style="color: var(--clr-accent); border-color: var(--clr-accent)"
+              target="_blank"
+              rel="noopener"
+            >
+              Order on WhatsApp
+            </a>
+
+            <div class="product-share">
+              <p class="product-share__label">Share this Product</p>
+              <div class="product-share__btns">
+                <a
+                  id="share-whatsapp"
+                  class="share-btn share-btn--wa"
+                  href="#"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Share on WhatsApp"
+                  title="Share on WhatsApp"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+                    />
+                  </svg>
+                </a>
+
+                <a
+                  id="share-facebook"
+                  class="share-btn share-btn--fb"
+                  href="#"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Share on Facebook"
+                  title="Share on Facebook"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M22 12.07C22 6.503 17.523 2 12 2S2 6.503 2 12.07c0 5.019 3.657 9.182 8.438 9.93v-7.03H7.898v-2.9h2.54V9.845c0-2.52 1.492-3.913 3.777-3.913 1.095 0 2.24.196 2.24.196v2.476H15.19c-1.246 0-1.635.776-1.635 1.572v1.894h2.782l-.445 2.9h-2.337V22c4.78-.748 8.445-4.911 8.445-9.93z"
+                    />
+                  </svg>
+                </a>
+
+                <a
+                  id="share-instagram"
+                  class="share-btn share-btn--ig"
+                  href="https://www.instagram.com/aso_luxe.mu?igsh=MXJua2h1cGozYmVxbg%3D%3D&utm_source=qr"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Open Instagram"
+                  title="Open Instagram"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.8A3.95 3.95 0 0 0 3.8 7.75v8.5a3.95 3.95 0 0 0 3.95 3.95h8.5a3.95 3.95 0 0 0 3.95-3.95v-8.5a3.95 3.95 0 0 0-3.95-3.95h-8.5zm8.9 1.35a1.05 1.05 0 1 1 0 2.1 1.05 1.05 0 0 1 0-2.1zM12 6.85A5.15 5.15 0 1 1 6.85 12 5.16 5.16 0 0 1 12 6.85zm0 1.8A3.35 3.35 0 1 0 15.35 12 3.35 3.35 0 0 0 12 8.65z"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <button
+              class="btn btn--ghost btn--full mt-sm"
+              onclick="showPage('shop')"
+              type="button"
+            >
+              ← Back to Shop
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================
+       PAGE: CHECKOUT
+       Flow: Pick Pickup or Delivery → Select Shipping → Pay → WhatsApp
+    ============================================================ -->
+    <main id="page-checkout" class="page">
+      <section class="checkout-section section">
+        <div class="container">
+          <h1 class="checkout__title">Checkout</h1>
+
+          <div class="checkout__layout">
+            <!-- ── LEFT: Shipping Method ── -->
+            <div class="checkout__left">
+              <!-- Step 1: Choose method -->
+              <div class="checkout-card" id="co-method-card">
+                <h2 class="checkout-card__title">Shipping Method</h2>
+
+                <label class="co-method-row" id="co-pickup-row">
+                  <input
+                    type="radio"
+                    name="co-method"
+                    value="pickup"
+                    id="co-pickup-radio"
+                  />
+                  <div class="co-method-row__info">
+                    <span class="co-method-row__name">🏫 Pickup</span>
+                    <span class="co-method-row__detail"
+                      >African Leadership Campus, Kongo 105</span
+                    >
+                  </div>
+                  <span class="co-method-row__price">Free</span>
+                </label>
+
+                <label class="co-method-row" id="co-delivery-row">
+                  <input
+                    type="radio"
+                    name="co-method"
+                    value="delivery"
+                    id="co-delivery-radio"
+                  />
+                  <div class="co-method-row__info">
+                    <span class="co-method-row__name">🚚 Delivery</span>
+                    <span class="co-method-row__detail"
+                      >Select your area below</span
+                    >
+                  </div>
+                </label>
+
+                <!-- Delivery area selector — shown only when Delivery is chosen -->
+                <div id="co-delivery-areas" hidden>
+                  <p class="co-area-label">Select your delivery area:</p>
+                  <div class="co-area-list">
+                    <!-- REPLACE: update area names and prices to match your real delivery zones -->
+                    <label class="co-area-row"
+                      ><input
+                        type="radio"
+                        name="co-area"
+                        value="Port Louis"
+                        data-price="50"
+                      />
+                      <span>Port Louis</span>
+                      <span class="co-area-price">Rs 50</span></label
+                    >
+                    <label class="co-area-row"
+                      ><input
+                        type="radio"
+                        name="co-area"
+                        value="Grand Baie"
+                        data-price="25"
+                      />
+                      <span>Grand Baie</span>
+                      <span class="co-area-price">Rs 25</span></label
+                    >
+                    <label class="co-area-row"
+                      ><input
+                        type="radio"
+                        name="co-area"
+                        value="Curepipe"
+                        data-price="60"
+                      />
+                      <span>Curepipe</span>
+                      <span class="co-area-price">Rs 60</span></label
+                    >
+                    <label class="co-area-row"
+                      ><input
+                        type="radio"
+                        name="co-area"
+                        value="Quatre Bornes"
+                        data-price="45"
+                      />
+                      <span>Quatre Bornes</span>
+                      <span class="co-area-price">Rs 45</span></label
+                    >
+                    <label class="co-area-row"
+                      ><input
+                        type="radio"
+                        name="co-area"
+                        value="Rose Hill"
+                        data-price="40"
+                      />
+                      <span>Rose Hill</span>
+                      <span class="co-area-price">Rs 40</span></label
+                    >
+                    <label class="co-area-row"
+                      ><input
+                        type="radio"
+                        name="co-area"
+                        value="Mahebourg"
+                        data-price="75"
+                      />
+                      <span>Mahebourg</span>
+                      <span class="co-area-price">Rs 75</span></label
+                    >
+                  </div>
+                </div>
+
+                <!-- Validation error message -->
+                <p class="co-error" id="co-method-error" hidden>
+                  Please select a shipping method before continuing.
+                </p>
+              </div>
+
+              <!-- Step 2: Customer Details (shown after method is chosen) -->
+              <div class="checkout-card" id="co-customer-card" hidden>
+                <h2 class="checkout-card__title">Your Details</h2>
+
+                <div class="form-group">
+                  <label for="co-fullname">Full Name</label>
+                  <input
+                    type="text"
+                    id="co-fullname"
+                    name="co-fullname"
+                    placeholder="e.g. Amara Diallo"
+                    autocomplete="name"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="co-phone">Phone Number</label>
+                  <input
+                    type="tel"
+                    id="co-phone"
+                    name="co-phone"
+                    placeholder="e.g. 5719 8497"
+                    autocomplete="tel"
+                  />
+                </div>
+
+                <!-- Delivery-only fields -->
+                <div id="co-delivery-fields" hidden>
+                  <div class="form-group">
+                    <label for="co-delivery-address">Delivery Address</label>
+                    <input
+                      type="text"
+                      id="co-delivery-address"
+                      name="co-delivery-address"
+                      placeholder="Street, building, door number…"
+                      autocomplete="street-address"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="co-delivery-note"
+                      >Delivery Note
+                      <span class="field-optional">(optional)</span></label
+                    >
+                    <textarea
+                      id="co-delivery-note"
+                      name="co-delivery-note"
+                      rows="3"
+                      placeholder="Any special instructions for the delivery rider…"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <p class="co-error" id="co-customer-error" hidden>
+                  Please fill in all required fields.
+                </p>
+              </div>
+
+              <!-- Step 3: Payment -->
+              <div class="checkout-card" id="co-payment-card">
+                <h2 class="checkout-card__title">Payment Method</h2>
+
+                <button
+                  type="button"
+                  class="co-merchant-btn"
+                  id="co-merchant-btn"
+                >
+                  🏦 Bank Transfer (Merchant Account)
+                </button>
+
+                <!-- Bank details — shown only after shipping is selected -->
+                <div class="co-bank-details" id="co-bank-details" hidden>
+                  <p class="co-bank-details__intro">
+                    Make your payment directly into the bank account below and
+                    upload proof of payment:
+                  </p>
+
+                  <!-- REPLACE: update with your real bank details -->
+                  <div class="co-bank-info">
+                    <p>
+                      <strong>Account Name:</strong>
+                      <span>PEACE CHIDINMA CHUKWUKA</span>
+                    </p>
+                    <p>
+                      <strong>Account No.:</strong> <span>000455376549</span>
+                    </p>
+                    <p>
+                      <strong>Bank Name:</strong>
+                      <span>MCB (Mauritius Commercial Bank)</span>
+                    </p>
+                  </div>
+
+                  <p class="co-bank-warning">
+                    ⚠️ This payment is not confirmed automatically and requires
+                    manual confirmation by the merchant.
+                  </p>
+
+                  <!-- Receipt upload -->
+                  <label class="co-upload-label" for="co-receipt-input">
+                    <span class="co-upload-label__icon">📎</span>
+                    <span id="co-upload-text"
+                      >Click here to upload payment receipt</span
+                    >
+                    <input
+                      type="file"
+                      id="co-receipt-input"
+                      accept="image/*,application/pdf"
+                      hidden
+                    />
+                  </label>
+                  <p class="co-upload-success" id="co-upload-success" hidden>
+                    ✓ Receipt attached: <span id="co-upload-filename"></span>
+                  </p>
+
+                  <!-- Confirm button — only active when receipt is uploaded -->
+                  <button
+                    type="button"
+                    class="btn btn--whatsapp btn--full co-confirm-btn"
+                    id="co-confirm-btn"
+                    disabled
+                  >
+                    I've Made Payment — Send Order via WhatsApp
+                  </button>
+                  <p class="co-confirm-note">
+                    You must upload your receipt before confirming.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- /checkout__left -->
+
+            <!-- ── RIGHT: Order Summary ── -->
+            <div class="checkout__right">
+              <div class="checkout-card">
+                <h2 class="checkout-card__title">Your Order</h2>
+                <div id="co-order-items"></div>
+
+                <div class="co-summary-rows">
+                  <div class="co-summary-row">
+                    <span>Subtotal</span>
+                    <span id="co-subtotal">Rs 0</span>
+                  </div>
+                  <div class="co-summary-row">
+                    <span>Shipping</span>
+                    <span id="co-shipping-display">—</span>
+                  </div>
+                  <div class="co-summary-row co-summary-row--total">
+                    <span>Total</span>
+                    <span id="co-total">Rs 0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /checkout__right -->
+          </div>
+          <!-- /checkout__layout -->
+
+          <button
+            type="button"
+            class="btn btn--ghost mt-sm"
+            onclick="showPage('shop')"
+            style="
+              color: var(--clr-text-muted);
+              border-color: var(--clr-text-muted);
+            "
+          >
+            ← Back to Shop
+          </button>
+        </div>
+      </section>
+    </main>
+    <!-- end #page-checkout -->
+
+    <main id="page-about" class="page">
+      <section class="about-hero">
+        <div
+          class="about-hero__bg"
+          style="
+            background-image: url(&quot;https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80&quot;);
+          "
+        ></div>
+        <div class="about-hero__overlay"></div>
+        <div class="about-hero__content container">
+          <h1>We are <em>Aso Luxe</em></h1>
+          <p>African heritage. Modern expression. Made in Mauritius.</p>
+        </div>
+      </section>
+
+      <section class="about-story section">
+        <div class="container about-story__inner">
+          <div class="about-story__text">
+            <h2>Our Story</h2>
+            <p>
+              Aso Luxe was born from a simple frustration: the continent had
+              centuries of the world's most vibrant textile traditions from
+              Ankara to Kente to Adire, yet everyday streetwear rarely
+              celebrated them.
+            </p>
+            <p>
+              Founded in Mauritius in 2025 by a group of young creatives, Aso
+              Luxe set out to change that. We design pieces rooted in African
+              print culture but engineered for modern life; whether you're
+              heading to a lecture, a rooftop dinner, or a beach party on the
+              east coast.
+            </p>
+            <p>
+              Our name comes from the Yoruba word <em>Aso</em>, meaning "cloth"
+              or "fabric", a tribute to the thread that ties us all together.
+              Every drop is limited, every piece intentional.
+            </p>
+          </div>
+
+          <div
+            class="about-story__image"
+            style="background-image: url(&quot;images/founder.jpeg&quot;)"
+          ></div>
+        </div>
+      </section>
+
+      <section class="values section section--cream">
+        <div class="container">
+          <h2 class="section-title">What We Stand For</h2>
+          <div class="values__grid">
+            <div class="value-card">
+              <span class="value-card__icon">🌍</span>
+              <h3>Pan-African Pride</h3>
+              <p>
+                Every print we use carries the memory of generations of African
+                artisans. We honour that lineage with every stitch.
+              </p>
+            </div>
+            <div class="value-card">
+              <span class="value-card__icon">✂️</span>
+              <h3>Crafted to Last</h3>
+              <p>
+                Fast fashion is the enemy of culture. We make limited, quality
+                drops that outlast seasons and trends.
+              </p>
+            </div>
+            <div class="value-card">
+              <span class="value-card__icon">🎓</span>
+              <h3>Built for Youth</h3>
+              <p>
+                Students and young professionals deserve luxury at accessible
+                prices. Aso Luxe bridges that gap.
+              </p>
+            </div>
+            <div class="value-card">
+              <span class="value-card__icon">🌿</span>
+              <h3>Conscious Production</h3>
+              <p>
+                Small batches, local sourcing where possible, and zero waste
+                packaging. The earth matters to us.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <main id="page-contact" class="page">
+      <section class="contact-hero section--sm">
+        <div class="container">
+          <h1 class="page-hero__title">Get in Touch</h1>
+          <p class="page-hero__sub">
+            Questions, custom orders, or just want to talk fashion? We're here.
+          </p>
+        </div>
+      </section>
+
+      <section class="contact-body section">
+        <div class="container contact-body__inner">
+          <div class="contact-form-wrap">
+            <h2>Send a Message</h2>
+            <form class="contact-form" id="contact-form" novalidate>
+              <div class="form-group">
+                <label for="c-name">Your Name</label>
+                <input
+                  type="text"
+                  id="c-name"
+                  name="name"
+                  placeholder="e.g. Amara Diallo"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="c-email">Email Address</label>
+                <input
+                  type="email"
+                  id="c-email"
+                  name="email"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="c-message">Message</label>
+                <textarea
+                  id="c-message"
+                  name="message"
+                  rows="5"
+                  placeholder="Tell us what's on your mind…"
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--full">
+                Send Message
+              </button>
+              <p class="form-success" id="form-success" hidden>
+                ✓ Message sent! We'll get back to you within 24 hours.
+              </p>
+            </form>
+          </div>
+
+          <div class="contact-info">
+            <h2>Contact Info</h2>
+
+            <div class="contact-info__item">
+              <span class="contact-info__icon">📍</span>
+              <div>
+                <strong>Location</strong>
+                <p>Pamplemousses, Mauritius</p>
+              </div>
+            </div>
+
+            <div class="contact-info__item">
+              <span class="contact-info__icon">📧</span>
+              <div>
+                <strong>Email</strong>
+                <p>
+                  <a href="mailto:hello.asoluxe@gmail.com"
+                    >hello.asoluxe@gmail.com</a
+                  >
+                </p>
+              </div>
+            </div>
+
+            <div class="contact-info__item">
+              <span class="contact-info__icon">🕐</span>
+              <div>
+                <strong>Hours</strong>
+                <p>Mon – Fri, 9am – 5pm MUT</p>
+              </div>
+            </div>
+
+            <div class="whatsapp-card">
+              <p class="whatsapp-card__label">Prefer instant replies?</p>
+              <h3>Chat with us on WhatsApp</h3>
+              <p>
+                We respond fastest here, usually within minutes during business
+                hours.
+              </p>
+              <a
+                href="https://wa.me/23055198497?text=Hello%20Aso%20Luxe%2C%20I%20have%20a%20question!"
+                class="btn btn--whatsapp"
+                target="_blank"
+                rel="noopener"
+              >
+                Open WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <div class="footer-brand">
+          <span class="logo-text"
+            >Aso<span class="logo-accent">Luxe</span></span
+          >
+          <p>
+            African style made for everyday wear.<br />Pamplemousses, Mauritius
+          </p>
+        </div>
+        <div class="footer-nav">
+          <h4>Navigate</h4>
+          <ul>
+            <li>
+              <a href="javascript:void(0)" onclick="showPage('home')">Home</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="showPage('shop')">Shop</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="showPage('about')">About</a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="showPage('contact')"
+                >Contact</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h4>Follow Us</h4>
+          <ul>
+            <li>
+              <a
+                href="https://www.instagram.com/aso_luxe.mu?igsh=MXJua2h1cGozYmVxbg%3D%3D&utm_source=qr"
+                target="_blank"
+                rel="noopener"
+                >Instagram</a
+              >
+            </li>
+            <li><a href="#" target="_blank" rel="noopener">TikTok</a></li>
+            <li><a href="#" target="_blank" rel="noopener">Facebook</a></li>
+          </ul>
+        </div>
+        <div class="footer-contact">
+          <h4>Contact</h4>
+          <p>
+            <a href="mailto:hello.asoluxe@gmail.com">hello.asoluxe@gmail.com</a>
+          </p>
+          <a
+            href="https://wa.me/23055198497"
+            class="btn btn--whatsapp btn--sm"
+            target="_blank"
+            rel="noopener"
+            >WhatsApp Us</a
+          >
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Aso Luxe. Made with love in Mauritius.</p>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
